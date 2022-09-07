@@ -2,102 +2,98 @@
 
 #define SHELL_H
 
-
+#include <string.h>
 
 #include <stdio.h>
 
 #include <stdlib.h>
 
-#include <string.h>
-
-#include <signal.h>
-
-#include <unistd.h>
+#include <sys/types.h>
 
 #include <sys/wait.h>
 
 #include <sys/stat.h>
 
+#include <unistd.h>
 
+#include <fcntl.h>
 
-/* size of buffer for user input */
+#include <signal.h>
 
-#define READ_BUF 1000
+void _printppid(void);
 
+int _putchar(char c);
 
+char *read_input(void);
 
-#define DELIM " \a\t\r\n"
+char **strtokarray(char *str);
 
+void freeptrarray(char **ptr);
 
+char *_strncpy(char *dest, char *src, int n);
 
-/* command type */
+int _strlen(char *s);
 
-#define INTERNAL_CMD 1
+int _strncmp(const char *s1, const char *s2, size_t n);
 
-#define EXTERNAL_CMD 2
+char *str_concat(char *s1, char *s2);
 
-#define PATH_CMD 3
+int execute_input(char **av, char **cmds, char **env, int count);
 
-#define INVALID_CMD -1
-
-
-
-/* global environ variable declaration */
+char *_getenv(const char *name);
 
 extern char **environ;
 
+/**
+ * struct pathlist - nodes for singly linked list of PATH directories
+ * @str: single directory from PATH
+ * @next: pointer to next node in list
+ */
 
-
-typedef struct internal_func
+typedef struct pathlist
 
 {
 
-	char *cmd_name;
-	void (*func)(char **command);
+	char *str;
 
-} map_func;
+	struct pathlist *next;
 
+} list_p;
 
+list_p *add_node(list_p **head, char *str);
 
-/* commands */
+list_p *createpathlist(char *str);
 
-void env(char **);
+size_t print_list(const list_p *h);
 
-void ch_dir(char **);
+void free_list(list_p *head);
 
-void quit(char **);
+list_p *pathlist(void);
 
+void env_print(char **env);
 
+char *pathandfree(char *arg);
 
-/* utilisable function */
+char *pathchecker(list_p **head, char *arg);
 
-void ctrl_C(int);
+int spacecheck(char *line);
 
-char *_getline(void);
+void _halt(int sig);
 
-char **tokenize(char *, const char *);
+void freeptrarrayandexit(char **str, int stat);
 
-void shell_execute(char **, int);
+int _strcmp(char *s1, char *s2);
 
-int check_command(char *);
+void errortime(char **av, char **cmds, int count);
 
-void execute(char **, int);
+char *_itoa(int value, char *buffer, int base);
 
-/* helper function */
+int _abs(int a);
 
-int print(char *, int);
+char *_reverse(char *buffer, int i, int j);
 
-void (*get_func(char *))(char **);
+void _swap(char *x, char *y);
 
-/*string functions */
-
-int _strlen(char *);
-
-int _strcmp(char*, char *);
-
-
-void *_realloc(void *, int, int);
-
-char *_getenv(char *);
+int _atoi(char *str);
 
 #endif 
